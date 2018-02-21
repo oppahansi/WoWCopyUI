@@ -181,7 +181,7 @@ public class AccountSetup extends JFrame implements ActionListener {
     private void createNewAccount(String account) {
         setupFileIO();
 
-        if (!selectFolders(account)) {
+        if (selectFolders(account)) {
             if (templateFolder == null || accountFolder == null)
                 updateTextNotification("Folders could not be initialized. Select correct folders or provide correct account, realm and char names.", Color.RED);
             else {
@@ -234,9 +234,16 @@ public class AccountSetup extends JFrame implements ActionListener {
     }
 
     private boolean copyFiles() {
-        accountFolder = new File(usingExistingAccount.isSelected() ? accountFolder.getParentFile().getAbsolutePath() + "\\" + accountName : accountFolder.getAbsolutePath());
+
+        if (usingExistingAccount.isSelected() && accountName.compareTo(oldAccountName) == 0) {
+            templateFolder = new File(templateFolder.getAbsolutePath() + "\\" + oldRealmName + "\\" + oldCharName);
+            accountFolder = new File(accountFolder.getAbsolutePath() + "\\" + realmName + "\\" + charName);
+        }
+        else
+            accountFolder = new File(usingExistingAccount.isSelected() ? accountFolder.getParentFile().getAbsolutePath() + "\\" + accountName : accountFolder.getAbsolutePath());
 
         try {
+
             FileUtils.copyDirectory(templateFolder, accountFolder);
             return true;
         } catch (IOException e1) {
@@ -247,22 +254,24 @@ public class AccountSetup extends JFrame implements ActionListener {
     }
 
     private void renameSubFolders() throws IOException {
-        String realm = usingExistingAccount.isSelected() ? oldRealmName : templateRealm;
-        String character = usingExistingAccount.isSelected() ? oldCharName : templateChar;
+        if (usingExistingAccount.isSelected() && accountName.compareTo(oldAccountName) != 0) {
+            String realm = usingExistingAccount.isSelected() ? oldRealmName : templateRealm;
+            String character = usingExistingAccount.isSelected() ? oldCharName : templateChar;
 
-        String realmPath = usingExistingAccount.isSelected() ?
-                accountFolder.getAbsolutePath() + "\\" + oldRealmName :
-                accountFolder.getAbsolutePath() + "\\" + realm;
+            String realmPath = usingExistingAccount.isSelected() ?
+                    accountFolder.getAbsolutePath() + "\\" + oldRealmName :
+                    accountFolder.getAbsolutePath() + "\\" + realm;
 
-        File dir = new File(realmPath);
-        File newDir = new File(accountFolder.getAbsolutePath() + "\\" + realmName);
+            File dir = new File(realmPath);
+            File newDir = new File(accountFolder.getAbsolutePath() + "\\" + realmName);
 
-        Files.move(dir.toPath(), newDir.toPath());
+            Files.move(dir.toPath(), newDir.toPath());
 
-        dir = new File(accountFolder.getAbsolutePath() + "\\" + realmName +"\\" + character);
-        newDir = new File(accountFolder.getAbsolutePath() + "\\" + realmName +"\\" + charName);
+            dir = new File(accountFolder.getAbsolutePath() + "\\" + realmName +"\\" + character);
+            newDir = new File(accountFolder.getAbsolutePath() + "\\" + realmName +"\\" + charName);
 
-        Files.move(dir.toPath(), newDir.toPath());
+            Files.move(dir.toPath(), newDir.toPath());
+        }
     }
 
     private ArrayList<File> addFilesToList(String directoryName) {
