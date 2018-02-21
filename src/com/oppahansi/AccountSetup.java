@@ -44,11 +44,13 @@ public class AccountSetup extends JFrame implements ActionListener {
 
     private String templateRealm = "MYREALMNAME";
     private String templateChar = "MYCHARNAME";
-    private String realmName = "";
-    private String charName = "";
+
+    private String newRealmName = "";
+    private String newCharName = "";
+    private String newAccountName = "";
+
     private String oldRealmName = "";
     private String oldCharName = "";
-    private String accountName = "";
     private String oldAccountName = "";
 
     AccountSetup() {
@@ -124,22 +126,20 @@ public class AccountSetup extends JFrame implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == createNewAccountButton) {
-            accountName = accountNameField.getText();
-            realmName = realmNameField.getText();
-            charName = charNameField.getText();
+            newAccountName = accountNameField.getText();
+            newRealmName = realmNameField.getText();
+            newCharName = charNameField.getText();
             oldAccountName = oldAccountNameField.getText();
             oldRealmName = oldRealmNameField.getText();
             oldCharName = oldCharNameField.getText();
 
-            fixStrings();
-
-            if (accountName == null || accountName.length() == 0) {
+            if (newAccountName == null || newAccountName.length() == 0) {
                 updateTextNotification("Account name cannot be empty.", Color.RED);
                 return;
-            } else if (realmName == null || realmName.length() == 0) {
+            } else if (newRealmName == null || newRealmName.length() == 0) {
                 updateTextNotification("Realm cannot be empty.", Color.RED);
                 return;
-            } else if (charName == null || charName.length() == 0) {
+            } else if (newCharName == null || newCharName.length() == 0) {
                 updateTextNotification("Char name cannot be empty.", Color.RED);
                 return;
             }
@@ -156,7 +156,9 @@ public class AccountSetup extends JFrame implements ActionListener {
                 }
             }
 
-            createNewAccount(accountName);
+            fixStrings();
+
+            createNewAccount();
 
         } else if (e.getSource() == usingExistingAccount) {
             oldAccountNameLabel.setEnabled(usingExistingAccount.isSelected());
@@ -170,21 +172,23 @@ public class AccountSetup extends JFrame implements ActionListener {
 
     private void fixStrings()
     {
-        accountName = accountName.toUpperCase();
-        realmName = StringUtils.capitalize(realmName.toLowerCase());
-        charName =  StringUtils.capitalize(charName.toLowerCase());
+        newAccountName = newAccountName.toUpperCase();
+        newRealmName = StringUtils.capitalize(newRealmName.toLowerCase());
+        newCharName =  StringUtils.capitalize(newCharName.toLowerCase());
         oldAccountName = oldAccountName.toUpperCase();
         oldRealmName = StringUtils.capitalize(oldRealmName.toLowerCase());
         oldCharName = StringUtils.capitalize(oldCharName.toLowerCase());
     }
 
-    private void createNewAccount(String account) {
+    private void createNewAccount() {
         setupFileIO();
 
-        if (selectFolders(account)) {
+        if (selectFolders()) {
             if (templateFolder == null || accountFolder == null)
                 updateTextNotification("Folders could not be initialized. Select correct folders or provide correct account, realm and char names.", Color.RED);
             else {
+                setFolders();
+
                 if (copyFiles())
                 {
                     try {
@@ -210,40 +214,43 @@ public class AccountSetup extends JFrame implements ActionListener {
 
     }
 
-    private boolean selectFolders(String account) {
+    private void setupFileIO() {
+        folderChooser = new JFileChooser();
+        folderChooser.setCurrentDirectory(new java.io.File("."));
+        folderChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+        folderChooser.setAcceptAllFileFilterUsed(false);
+    }
+
+    private boolean selectFolders() {
+        folderChooser.setDialogTitle(usingExistingAccount.isSelected() ? "Select Existing Account Folder." : "Select VG UI Template Folder");
         if (folderChooser.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
             templateFolder = folderChooser.getSelectedFile();
 
             folderChooser.setDialogTitle("Select destination WTF/Account folder");
-
             if (folderChooser.showOpenDialog(this) == JFileChooser.APPROVE_OPTION)
-                accountFolder = new File(folderChooser.getSelectedFile()+ "\\" + account);
+                accountFolder = folderChooser.getSelectedFile();
 
-            return templateFolder.exists() && accountFolder.exists();
+            return templateFolder.exists();
         }
 
         return false;
     }
 
-    private void setupFileIO() {
-        folderChooser = new JFileChooser();
-        folderChooser.setCurrentDirectory(new java.io.File("."));
-        folderChooser.setDialogTitle(usingExistingAccount.isSelected() ? "Select Existing Account Folder." : "Select VG UI Template Folder");
-        folderChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-        folderChooser.setAcceptAllFileFilterUsed(false);
+    private void setFolders() {
+        if (usingExistingAccount.isSelected()) {
+            if (newAccountName.compareTo(oldAccountName) == 0) {
+                templateFolder = new File(templateFolder.getAbsolutePath() + "\\" + oldRealmName + "\\" + oldCharName);
+                accountFolder = new File(accountFolder.getAbsolutePath() + "\\" + oldAccountName + "\\" + newRealmName + "\\" + newCharName);
+            } else {
+                accountFolder = new File(accountFolder.getAbsolutePath() + "\\" + newAccountName);
+            }
+        }
+        else
+            accountFolder = new File(accountFolder.getAbsolutePath() + "\\" + newAccountName);
     }
 
     private boolean copyFiles() {
-
-        if (usingExistingAccount.isSelected() && accountName.compareTo(oldAccountName) == 0) {
-            templateFolder = new File(templateFolder.getAbsolutePath() + "\\" + oldRealmName + "\\" + oldCharName);
-            accountFolder = new File(accountFolder.getAbsolutePath() + "\\" + realmName + "\\" + charName);
-        }
-        else
-            accountFolder = new File(usingExistingAccount.isSelected() ? accountFolder.getParentFile().getAbsolutePath() + "\\" + accountName : accountFolder.getAbsolutePath());
-
         try {
-
             FileUtils.copyDirectory(templateFolder, accountFolder);
             return true;
         } catch (IOException e1) {
@@ -254,23 +261,38 @@ public class AccountSetup extends JFrame implements ActionListener {
     }
 
     private void renameSubFolders() throws IOException {
-        if (usingExistingAccount.isSelected() && accountName.compareTo(oldAccountName) != 0) {
-            String realm = usingExistingAccount.isSelected() ? oldRealmName : templateRealm;
-            String character = usingExistingAccount.isSelected() ? oldCharName : templateChar;
+        String realmPathOld = "";
+        String realmPathNew = "";
+        String charPathOld;
+        String charPathNew;
 
-            String realmPath = usingExistingAccount.isSelected() ?
-                    accountFolder.getAbsolutePath() + "\\" + oldRealmName :
-                    accountFolder.getAbsolutePath() + "\\" + realm;
+        if (!usingExistingAccount.isSelected()) {
+            realmPathOld = accountFolder.getAbsolutePath() + "\\" + templateRealm;
+            realmPathNew = accountFolder.getAbsolutePath() + "\\" + newRealmName;
+            charPathOld = realmPathNew + "\\" + templateChar;
+            charPathNew = realmPathNew + "\\" + newCharName;
+        }
+        else {
+            if (oldAccountName.compareTo(newAccountName) == 0) {
+                charPathOld = accountFolder.getAbsolutePath() + "\\" + oldCharName;
+                charPathNew = accountFolder.getAbsolutePath() + "\\" + newCharName;
+            }
+            else {
+                realmPathOld = accountFolder.getAbsolutePath() + "\\" + oldRealmName;
+                realmPathNew = accountFolder.getAbsolutePath() + "\\" + newRealmName;
+                charPathOld = realmPathNew + "\\" + oldCharName;
+                charPathNew = realmPathNew + "\\" + newCharName;
+            }
+        }
 
-            File dir = new File(realmPath);
-            File newDir = new File(accountFolder.getAbsolutePath() + "\\" + realmName);
-
+        if (oldAccountName.compareTo(newAccountName) != 0) {
+            File dir = new File(realmPathOld);
+            File newDir = new File(realmPathNew);
             Files.move(dir.toPath(), newDir.toPath());
 
-            dir = new File(accountFolder.getAbsolutePath() + "\\" + realmName +"\\" + character);
-            newDir = new File(accountFolder.getAbsolutePath() + "\\" + realmName +"\\" + charName);
-
-            Files.move(dir.toPath(), newDir.toPath());
+            File dirr = new File(charPathOld);
+            File newDirr = new File(charPathNew);
+            Files.move(dirr.toPath(), newDirr.toPath());
         }
     }
 
@@ -301,7 +323,7 @@ public class AccountSetup extends JFrame implements ActionListener {
             if (!currentFile.isFile())
                 continue;
 
-            modifyFile(currentFile.getAbsolutePath(), replaceRealm, realmName, replaceChar, charName);
+            modifyFile(currentFile.getAbsolutePath(), replaceRealm, newRealmName, replaceChar, newCharName);
         }
 
         updateTextNotification("Account has been set up.", Color.GREEN);
