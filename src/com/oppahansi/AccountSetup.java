@@ -254,16 +254,12 @@ public class AccountSetup extends JFrame implements ActionListener {
                 accountFolder.getAbsolutePath() + "\\" + oldRealmName :
                 accountFolder.getAbsolutePath() + "\\" + realm;
 
-        String charPath = usingExistingAccount.isSelected() ?
-                accountFolder.getAbsolutePath() + "\\" + oldRealmName + "\\" + character :
-                accountFolder.getAbsolutePath() + "\\" + realmName +"\\" + character;
-
         File dir = new File(realmPath);
         File newDir = new File(accountFolder.getAbsolutePath() + "\\" + realmName);
 
         Files.move(dir.toPath(), newDir.toPath());
 
-        dir = new File(charPath);
+        dir = new File(accountFolder.getAbsolutePath() + "\\" + realmName +"\\" + character);
         newDir = new File(accountFolder.getAbsolutePath() + "\\" + realmName +"\\" + charName);
 
         Files.move(dir.toPath(), newDir.toPath());
