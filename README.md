@@ -21,6 +21,8 @@ If you dont have a template, you will have to check the 'Using existing UI?' che
 4. If you have a UI template and want to set it up, uncheck the "Using existing UI?" box.
 5. Fill out all fields.
 6. Click Copy UI
+    1. Depending on the amount of addon files you may need a few seconds.
+    2. Once done you will see a green message below the button.
 7. Select the required folders, reflected in the title bars of opened windows. 
 8. Done.
 
@@ -35,5 +37,7 @@ If you dont have a template, you will have to check the 'Using existing UI?' che
 4. Click on Copy UI.
 5. Select your current Acc folder.
 6. Select a folder where you want to save it.
+    1. Depending on the amount of addon files you may need a few seconds.
+    2. Once done you will see a green message below the button.
 7. Share your UI.
 8. Profit.
