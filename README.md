@@ -18,7 +18,7 @@ If you dont have a template, you will have to check the 'Using existing UI?' che
 1. Download latest WoW Copy UI.jar from [releases](https://github.com/oppahansi/WoWCopyUI/releases) (I suggest placing it into you wow folder, means less browsing during folder selection).
 2. Start WoW Copy UI.jar
 3. If you don't have a UI template or you dont want to use one, check the "Using existing UI?" box.
-4. If you have a UI template and want to set it up, check the "Using existing UI?" box.
+4. If you have a UI template and want to set it up, uncheck the "Using existing UI?" box.
 5. Fill out all fields.
 6. Click Copy UI
 7. Select the required folders, reflected in the title bars of opened windows. 
