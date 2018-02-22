@@ -222,11 +222,11 @@ public class AccountSetup extends JFrame implements ActionListener {
     }
 
     private boolean selectFolders() {
-        folderChooser.setDialogTitle(usingExistingAccount.isSelected() ? "Select Existing Account Folder." : "Select VG UI Template Folder");
+        folderChooser.setDialogTitle(usingExistingAccount.isSelected() ? "Select Existing Account Folder." : "Select UI Template Folder");
         if (folderChooser.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
             templateFolder = folderChooser.getSelectedFile();
 
-            folderChooser.setDialogTitle("Select destination WTF/Account folder");
+            folderChooser.setDialogTitle("Select Destination WTF/Account Folder");
             if (folderChooser.showOpenDialog(this) == JFileChooser.APPROVE_OPTION)
                 accountFolder = folderChooser.getSelectedFile();
 
