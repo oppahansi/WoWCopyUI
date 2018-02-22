@@ -28,7 +28,7 @@ If you dont have a template, you will have to check the 'Using existing UI?' che
 
 1. Follow the steps above up to 3. but check 'Using existing UI?'
 2. Fill out the 'NEW' fields like this:
-    1. NEW ACCHANTNAME : MYUSERNAME
+    1. NEW ACCOUNTNAME : MYUSERNAME
     2. NEW Realm name : MYREALMNAME
     3. NEW Char name : MYCHARNAME
 3. Fill out the 'OLD' fields with your current information.
