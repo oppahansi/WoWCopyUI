@@ -170,11 +170,19 @@ public class AccountSetup extends JFrame implements ActionListener {
         }
     }
 
-    private void fixStrings()
-    {
-        newAccountName = newAccountName.toUpperCase();
-        newRealmName = StringUtils.capitalize(newRealmName.toLowerCase());
-        newCharName =  StringUtils.capitalize(newCharName.toLowerCase());
+    private void fixStrings() {
+        if (usingExistingAccount.isSelected()) {
+            if (newAccountName.compareTo("MYUSERNAME") != 0) {
+                newAccountName = newAccountName.toUpperCase();
+                newRealmName = StringUtils.capitalize(newRealmName.toLowerCase());
+                newCharName =  StringUtils.capitalize(newCharName.toLowerCase());
+            }
+        } else {
+            newAccountName = newAccountName.toUpperCase();
+            newRealmName = StringUtils.capitalize(newRealmName.toLowerCase());
+            newCharName =  StringUtils.capitalize(newCharName.toLowerCase());
+        }
+
         oldAccountName = oldAccountName.toUpperCase();
         oldRealmName = StringUtils.capitalize(oldRealmName.toLowerCase());
         oldCharName = StringUtils.capitalize(oldCharName.toLowerCase());
@@ -215,6 +223,7 @@ public class AccountSetup extends JFrame implements ActionListener {
     }
 
     private void setupFileIO() {
+        updateTextNotification("Setting up file io.", Color.ORANGE);
         folderChooser = new JFileChooser();
         folderChooser.setCurrentDirectory(new java.io.File("."));
         folderChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
@@ -222,6 +231,7 @@ public class AccountSetup extends JFrame implements ActionListener {
     }
 
     private boolean selectFolders() {
+        updateTextNotification("Selecting folders.", Color.ORANGE);
         folderChooser.setDialogTitle(usingExistingAccount.isSelected() ? "Select Existing Account Folder." : "Select UI Template Folder");
         if (folderChooser.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
             templateFolder = folderChooser.getSelectedFile();
@@ -237,6 +247,7 @@ public class AccountSetup extends JFrame implements ActionListener {
     }
 
     private void setFolders() {
+        updateTextNotification("Setting up folders.", Color.ORANGE);
         if (usingExistingAccount.isSelected()) {
             if (newAccountName.compareTo(oldAccountName) == 0) {
                 templateFolder = new File(templateFolder.getAbsolutePath() + "\\" + oldRealmName + "\\" + oldCharName);
@@ -251,6 +262,7 @@ public class AccountSetup extends JFrame implements ActionListener {
 
     private boolean copyFiles() {
         try {
+            updateTextNotification("Copying files.", Color.ORANGE);
             FileUtils.copyDirectory(templateFolder, accountFolder);
             return true;
         } catch (IOException e1) {
@@ -261,6 +273,7 @@ public class AccountSetup extends JFrame implements ActionListener {
     }
 
     private void renameSubFolders() throws IOException {
+        updateTextNotification("Renaming folders.", Color.ORANGE);
         String realmPathOld = "";
         String realmPathNew = "";
         String charPathOld;
@@ -297,6 +310,7 @@ public class AccountSetup extends JFrame implements ActionListener {
     }
 
     private ArrayList<File> addFilesToList(String directoryName) {
+        updateTextNotification("Making file list.", Color.ORANGE);
         File directory = new File(directoryName);
         File[] fList = directory.listFiles();
 
@@ -315,6 +329,7 @@ public class AccountSetup extends JFrame implements ActionListener {
     }
 
     private void renameVariablesInFiles() {
+        updateTextNotification("Renaming addon variables in files.", Color.ORANGE);
         String replaceRealm = usingExistingAccount.isSelected() ? oldRealmName : templateRealm;
         String replaceChar = usingExistingAccount.isSelected() ? oldCharName : templateChar;
 
@@ -329,8 +344,7 @@ public class AccountSetup extends JFrame implements ActionListener {
         updateTextNotification("Account has been set up.", Color.GREEN);
     }
 
-    void modifyFile(String filePath, String oldString1, String newString1, String oldString2, String newString2)
-    {
+    void modifyFile(String filePath, String oldString1, String newString1, String oldString2, String newString2) {
         updateTextNotification("Modyfying " + filePath, Color.GREEN);
 
         File fileToBeModified = new File(filePath);
