@@ -1,43 +1,31 @@
 # WoWCopyUI (Vanilla, TBC)
 Copy your existing UI to a new Character - including updating all addon files.
 
-![alt text](https://i.imgur.com/sbYHHb3.png "Screenshot")
-
 ## Info
 This tool helps you copy your old UI to a new character.
 It updates all folder names and all addon files to match your new character name and realm.
 
 ## Note:
 This was initially designed for the guild [Vanguard](http://vanguard-kronos3.shivtr.com/) on the [Kronos](http://www.kronos-wow.com/) server.
-That means, you can use specific UIs set up as templates, see below how to make a template.
-
-If you dont have a template, you will have to check the 'Using existing UI?' checkbox and select an existing UI.
+That means, you can use UI templates made by this tool to set up a new UIs, see below how to make a template.
 
 ## How to:
 0. Requires JAVA, may not work without admin rights, you need rights to write and read files and folders. Check code if you dont trust me.
 1. Download latest WoW Copy UI.jar from [releases](https://github.com/oppahansi/WoWCopyUI/releases) (I suggest placing it into you wow folder, means less browsing during folder selection).
 2. Start WoW Copy UI.jar
-3. If you don't have a UI template or you dont want to use one, check the "Using existing UI?" box.
-4. If you have a UI template and want to set it up, uncheck the "Using existing UI?" box.
-5. Fill out all fields.
-6. Click Copy UI
-    1. Depending on the amount of addon files you may need a few seconds.
-    2. Once done you will see a green message below the button.
-7. Select the required folders, reflected in the title bars of opened windows. 
-8. Done.
+3. Choose what you want to do.
+4. Fill out the required fields.
+5. Choose the required folders.
+6. Click Setup UI / Create Template
+7. Done.
 
-## Making a template
+## Screenshots
 
-1. Follow the steps above up to 3. but check 'Using existing UI?'
-2. Fill out the 'NEW' fields like this:
-    1. NEW ACCOUNTNAME : MYUSERNAME
-    2. NEW Realm name : MYREALMNAME
-    3. NEW Char name : MYCHARNAME
-3. Fill out the 'OLD' fields with your current information.
-4. Click on Copy UI.
-5. Select your current Acc folder.
-6. Select a folder where you want to save it.
-    1. Depending on the amount of addon files you may need a few seconds.
-    2. Once done you will see a green message below the button.
-7. Share your UI.
-8. Profit.
+![alt text](https://i.imgur.com/4rQ7Gkn.png "Welcome Screen")
+![alt text](https://i.imgur.com/NHDUBKd.png "From Template")
+![alt text](https://i.imgur.com/ufHZu5U.png "From Existing UI")
+![alt text](https://i.imgur.com/qSARntr.png "Make Template")
+![alt text](https://i.imgur.com/DzomIAN.png "Success")
+
+## Note 2:
+Some UI setups require the related config.wtf file locaten in the WTF/ folder. This is not included in the process. In case your UI requires the config file, you have to include it yourself and dont forget to change the names in the config file before sharing. 
