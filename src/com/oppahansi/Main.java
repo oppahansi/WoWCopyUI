@@ -1,15 +1,28 @@
 package com.oppahansi;
 
-import javax.swing.*;
+import javafx.application.Application;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.scene.image.Image;
+import javafx.stage.Stage;
 
-public class Main {
+import java.net.URL;
+
+public class Main extends Application {
+
+    @Override
+    public void start(Stage stage) throws Exception {
+        Parent root = FXMLLoader.load(getClass().getResource("FXML/Welcome.fxml"));
+        Scene scene = new Scene(root);
+
+        stage.setScene(scene);
+        stage.setTitle("WoW Copy UI");
+        stage.getIcons().add(new Image("/img/wow.png"));
+        stage.show();
+    }
 
     public static void main(String[] args) {
-        AccountSetup frame = new AccountSetup();
-        frame.setTitle("WoW Copy UI");
-        frame.setBounds(10, 10, 400, 450);
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setResizable(false);
-        frame.setVisible(true);
+        launch(args);
     }
 }

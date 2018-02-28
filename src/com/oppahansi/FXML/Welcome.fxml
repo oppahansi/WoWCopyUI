@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.jfoenix.controls.JFXButton?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+
+<AnchorPane fx:id="anchorPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="450.0" prefWidth="800.0"
+            xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.oppahansi.Controller.WelcomeController">
+   <ImageView fitHeight="450.0" fitWidth="800.0" opacity="0.75">
+      <Image url="@/img/background.png"/>
+   </ImageView>
+   <JFXButton fx:id="fromTemplateButton" alignment="CENTER" contentDisplay="CENTER" layoutX="58.0" layoutY="185.0" onMouseClicked="#onFromTemplateClicked"
+              prefHeight="80.0" prefWidth="185.0" ripplerFill="#ffb65ccc" style="-fx-background-color: rgba(255, 100, 0, 0.25);" text="From Template"
+              textAlignment="CENTER" wrapText="true">
+      <font>
+         <Font name="System Bold" size="12.0"/>
+      </font>
+   </JFXButton>
+   <JFXButton fx:id="fromExistingButton" alignment="CENTER" contentDisplay="CENTER" layoutX="308.0" layoutY="185.0" onMouseClicked="#onFromExistingClicked"
+              prefHeight="80.0" prefWidth="185.0" ripplerFill="#ffb65ccc" style="-fx-background-color: rgba(255, 100, 0, 0.25);" text="From an existing UI"
+              textAlignment="CENTER" wrapText="true">
+      <font>
+         <Font name="System Bold" size="12.0"/>
+      </font>
+   </JFXButton>
+   <JFXButton fx:id="makeTemplateButton" alignment="CENTER" contentDisplay="CENTER" layoutX="562.0" layoutY="185.0" onMouseClicked="#onMakeTemplateClicked"
+              prefHeight="80.0" prefWidth="185.0" ripplerFill="#ffb65ccc" style="-fx-background-color: rgba(255, 100, 0, 0.25);" text="Make a Template"
+              textAlignment="CENTER" wrapText="true">
+      <font>
+         <Font name="System Bold" size="12.0"/>
+      </font>
+   </JFXButton>
+   <Text fill="#723b00" layoutX="161.0" layoutY="142.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Setup a UI for a new Character...">
+      <font>
+         <Font size="18.0"/>
+      </font>
+   </Text>
+</AnchorPane>
