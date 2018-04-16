@@ -33,7 +33,7 @@ public class Utils {
             return;
 
         if (capitalize)
-            textField.setText(StringUtils.capitalize(textField.getText().toLowerCase()));
+            textField.setText(StringUtils.capitalize(textField.getText()));
         else
             textField.setText(textField.getText().toUpperCase());
     }
