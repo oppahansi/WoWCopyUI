@@ -40,36 +40,31 @@ public class SetupUIService extends Service {
         @Override
         protected Object call() {
 
-            if (Utils.sourceFolder == null || Utils.destinationFolder == null)
-            {
+            if (Utils.sourceFolder == null || Utils.destinationFolder == null) {
                 updateMessage(Utils.foldersNotSetUp);
                 updateProgress(0, 1);
                 return null;
             }
 
-            if (Utils.sourceFolder.getName().toLowerCase().compareTo(oldAccName.toLowerCase()) != 0)
-            {
+            if (Utils.sourceFolder.getName().toLowerCase().compareTo(oldAccName.toLowerCase()) != 0) {
                 updateMessage(Utils.invalidTemplateFolder);
                 updateProgress(0, 1);
                 return null;
             }
 
-            if (Utils.destinationFolder.getName().toLowerCase().compareTo("account") != 0)
-            {
+            if (Utils.destinationFolder.getName().toLowerCase().compareTo("account") != 0) {
                 updateMessage(Utils.invalidAccFolder);
                 updateProgress(0, 1);
                 return null;
             }
 
-            if (!copyFiles())
-            {
+            if (!copyFiles()) {
                 updateMessage(Utils.errorCopying);
                 updateProgress(0, 1);
                 return null;
             }
 
-            if (!renameVariables())
-            {
+            if (!renameVariables()) {
                 updateMessage(Utils.errorRenaming);
                 updateProgress(0, 1);
                 return null;
@@ -86,21 +81,21 @@ public class SetupUIService extends Service {
         private boolean copyFiles() {
             try {
 
-                File accountFolder = new File(Utils.destinationFolder.getAbsolutePath() + "\\" + newAccName);
+                File accountFolder = new File(Utils.destinationFolder.getAbsolutePath() + File.separator + newAccName);
                 if (!accountFolder.exists())
                     if (!accountFolder.mkdir()) return false;
 
-                File realmFolder = new File(accountFolder.getAbsolutePath() + "\\" + newRealmName);
+                File realmFolder = new File(accountFolder.getAbsolutePath() + File.separator + newRealmName);
                 if (!realmFolder.exists())
                     if (!realmFolder.mkdir()) return false;
 
-                File charFolder = new File(realmFolder.getAbsolutePath() + "\\" + newCharName);
+                File charFolder = new File(realmFolder.getAbsolutePath() + File.separator + newCharName);
                 if (!charFolder.exists())
                     if (!charFolder.mkdir()) return false;
 
-                File templateSavedVariablesFolderAcc = new File(Utils.sourceFolder.getAbsolutePath() + "\\" + "SavedVariables");
-                File templateCharFolder = new File(Utils.sourceFolder.getAbsolutePath() + "\\" + oldRealmName+ "\\" + oldCharName);
-                File templateSavedVariablesFolderChar = new File(templateCharFolder + "\\" + "SavedVariables");
+                File templateSavedVariablesFolderAcc = new File(Utils.sourceFolder.getAbsolutePath() + File.separator + Utils.savedVariablesFodler);
+                File templateCharFolder = new File(Utils.sourceFolder.getAbsolutePath() + File.separator + oldRealmName + File.separator + oldCharName);
+                File templateSavedVariablesFolderChar = new File(templateCharFolder + File.separator + Utils.savedVariablesFodler);
                 File[] templateAccountFolderFiles = Utils.sourceFolder.listFiles(File::isFile);
                 File[] templateCharFolderFiles = templateCharFolder.listFiles(File::isFile);
                 File[] templateSavedVariablesAccFolderFiles = templateSavedVariablesFolderAcc.listFiles(File::isFile);
@@ -114,9 +109,9 @@ public class SetupUIService extends Service {
                 step =  0.5 / (double)(templateAccountFolderFiles.length + templateCharFolderFiles.length + templateSavedVariablesAccFolderFiles.length + templateSavedVariablesCharFolderFiles.length);
 
                 copyFiles(templateAccountFolderFiles, accountFolder.getAbsolutePath());
-                copyFiles(templateSavedVariablesAccFolderFiles, templateSavedVariablesFolderAcc.getAbsolutePath());
+                copyFiles(templateSavedVariablesAccFolderFiles, accountFolder.getAbsolutePath() + File.separator + Utils.savedVariablesFodler);
                 copyFiles(templateCharFolderFiles, charFolder.getAbsolutePath());
-                copyFiles(templateSavedVariablesCharFolderFiles, charFolder.getAbsolutePath() + "\\" + "SavedVariables");
+                copyFiles(templateSavedVariablesCharFolderFiles, charFolder.getAbsolutePath() + File.separator + Utils.savedVariablesFodler);
 
                 return true;
             } catch (IOException e1) {
@@ -132,7 +127,7 @@ public class SetupUIService extends Service {
                     progress += step;
                     updateProgress(progress, 1);
 
-                    File newFile = new File(destinationPath + "\\" + file.getName());
+                    File newFile = new File(destinationPath + File.separator + file.getName());
 
                     if (newFile.exists())
                         continue;
@@ -144,25 +139,25 @@ public class SetupUIService extends Service {
 
         private boolean renameVariables() {
 
-            File newAccountFolder = new File(Utils.destinationFolder.getAbsolutePath() + "\\" + newAccName);
+            File newAccountFolder = new File(Utils.destinationFolder.getAbsolutePath() + File.separator + newAccName);
             if (!newAccountFolder.exists())
                 return false;
 
             File[] accountFolderFiles = newAccountFolder.listFiles(File::isFile);
 
-            File savedVariablesFolderAcc = new File(newAccountFolder.getAbsolutePath() + "\\" + "SavedVariables");
+            File savedVariablesFolderAcc = new File(newAccountFolder.getAbsolutePath() + File.separator + Utils.savedVariablesFodler);
             if (!savedVariablesFolderAcc.exists())
                 return false;
 
             File[] savedVariablesAccFiles = savedVariablesFolderAcc.listFiles(File::isFile);
 
-            File charFolder = new File(newAccountFolder.getAbsolutePath() + "\\" + newRealmName + "\\" + newCharName);
+            File charFolder = new File(newAccountFolder.getAbsolutePath() + File.separator + newRealmName + File.separator + newCharName);
             if (!charFolder.exists())
                 return false;
 
             File[] charFolderFiles = charFolder.listFiles(File::isFile);
 
-            File savedVariablesFolderChar = new File(charFolder.getAbsolutePath() + "\\" + "SavedVariables");
+            File savedVariablesFolderChar = new File(charFolder.getAbsolutePath() + File.separator + Utils.savedVariablesFodler);
             if (!savedVariablesFolderChar.exists())
                 return false;
 
@@ -170,8 +165,7 @@ public class SetupUIService extends Service {
 
             File[] result;
 
-            if (oldAccName.toLowerCase().compareTo(newAccName.toLowerCase()) == 0)
-            {
+            if (oldAccName.toLowerCase().compareTo(newAccName.toLowerCase()) == 0) {
                 result = ArrayUtils.addAll(charFolderFiles, savedVariablesFolderChar);
             } else {
                 File[] mergedAccountFolderFiles = ArrayUtils.addAll(accountFolderFiles, savedVariablesAccFiles);
@@ -183,8 +177,7 @@ public class SetupUIService extends Service {
             progress = 0.50;
             step = 0.50 / result.length;
 
-            for (File file : result)
-            {
+            for (File file : result) {
                 Utils.modifyFile(file.getAbsolutePath(), oldRealmName, newRealmName, oldCharName, newCharName);
                 progress += step;
                 updateMessage("Updating: " + file.getName());
@@ -194,8 +187,7 @@ public class SetupUIService extends Service {
             return true;
         }
 
-        private void CleanUp()
-        {
+        private void CleanUp() {
             Utils.sourceFolder = null;
             Utils.destinationFolder = null;
             progress = 0;

@@ -1,18 +1,16 @@
 package com.oppahansi.logic;
 
-import com.jfoenix.controls.JFXProgressBar;
 import com.jfoenix.controls.JFXTextField;
 import com.jfoenix.validation.RequiredFieldValidator;
 import com.sun.xml.internal.ws.util.StringUtils;
-import org.apache.commons.io.FileUtils;
-import org.apache.commons.lang3.ArrayUtils;
+import javafx.stage.DirectoryChooser;
+import javafx.stage.Stage;
 
-import javax.swing.*;
 import java.io.*;
 import java.util.ArrayList;
 
 public class Utils {
-    private static JFileChooser folderChooser;
+    public static Stage stage;
 
     public static File sourceFolder;
     public static File destinationFolder;
@@ -20,6 +18,7 @@ public class Utils {
     public static String templateAccountName = "MYACCOUNTNAME";
     public static String templateRealmName = "MYREALMNAME";
     public static String templateCharName = "MYCHARNAME";
+    public static String savedVariablesFodler = "SavedVariables";
 
     public static String foldersNotSetUp = "Folders were not properly set up. Please select folders and try again.";
     public static String invalidAccFolder = "Invalid account folder selected. Please select the correct WTF/Account folder.";
@@ -27,6 +26,8 @@ public class Utils {
     public static String errorCopying = "There was an error while copying files. Read and write permissions required.";
     public static String errorRenaming = "There was an error while renaming variables in files. Read and write permissions required.";
     public static String uiSetUpForChar = "New UI for character - %s - has been set up.";
+
+    private static DirectoryChooser folderChooser;
 
     public static void fixInputString(JFXTextField textField, boolean capitalize) {
         if (textField == null)
@@ -58,14 +59,16 @@ public class Utils {
     public static String selectFolder(String title, boolean source) {
         if (folderChooser == null) setupFileIO();
 
-        folderChooser.setDialogTitle(title);
-        if (folderChooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
-            if (source)
-                sourceFolder = folderChooser.getSelectedFile();
-            else
-                destinationFolder = folderChooser.getSelectedFile();
+        folderChooser.setTitle(title);
+        File selectedFolder = folderChooser.showDialog(stage);
 
-            return folderChooser.getSelectedFile().getAbsolutePath();
+        if (selectedFolder != null) {
+            if (source)
+                sourceFolder = selectedFolder;
+            else
+                destinationFolder = selectedFolder;
+
+            return selectedFolder.getAbsolutePath();
         } else {
             if (source)
                 sourceFolder = null;
@@ -77,7 +80,6 @@ public class Utils {
     }
 
     public static void modifyFile(String filePath, String oldString1, String newString1, String oldString2, String newString2) {
-
         File fileToBeModified = new File(filePath);
 
         if (!fileToBeModified.isFile())
@@ -87,13 +89,11 @@ public class Utils {
         BufferedReader reader = null;
         FileWriter writer = null;
 
-        try
-        {
+        try {
             reader = new BufferedReader(new FileReader(fileToBeModified));
 
             String line = reader.readLine();
-            while (line != null)
-            {
+            while (line != null) {
                 oldContent = oldContent + line + System.lineSeparator();
                 line = reader.readLine();
             }
@@ -104,32 +104,22 @@ public class Utils {
             writer = new FileWriter(fileToBeModified);
             writer.write(newContent);
         }
-        catch (IOException e)
-        {
+        catch (IOException e) {
             e.printStackTrace();
         }
-        finally
-        {
-            try
-            {
+        finally {
+            try {
                 reader.close();
                 writer.close();
             }
-            catch (IOException e)
-            {
+            catch (IOException e) {
                 e.printStackTrace();
             }
         }
     }
 
-
     private static void setupFileIO() {
-        folderChooser = new JFileChooser();
-        folderChooser.setCurrentDirectory(new java.io.File("."));
-        folderChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-        folderChooser.setAcceptAllFileFilterUsed(false);
+        folderChooser = new DirectoryChooser();
+        folderChooser.setInitialDirectory(new java.io.File("."));
     }
-
-
-
 }

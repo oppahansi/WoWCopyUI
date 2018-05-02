@@ -31,22 +31,19 @@ public class MakeTemplateService extends Service {
         @Override
         protected Object call() {
 
-            if (Utils.sourceFolder == null || Utils.destinationFolder == null)
-            {
+            if (Utils.sourceFolder == null || Utils.destinationFolder == null) {
                 updateMessage(Utils.foldersNotSetUp);
                 updateProgress(0, 1);
                 return null;
             }
 
-            if (!copyFiles())
-            {
+            if (!copyFiles()) {
                 updateMessage(Utils.errorCopying);
                 updateProgress(0, 1);
                 return null;
             }
 
-            if (!renameVariables())
-            {
+            if (!renameVariables()) {
                 updateMessage(Utils.errorRenaming);
                 updateProgress(0, 1);
                 return null;
@@ -63,29 +60,29 @@ public class MakeTemplateService extends Service {
         private boolean copyFiles() {
             try {
 
-                File accountFolder = new File(Utils.destinationFolder.getAbsolutePath() + "\\" + Utils.templateAccountName);
+                File accountFolder = new File(Utils.destinationFolder.getAbsolutePath() + File.separator + Utils.templateAccountName);
                 if (!accountFolder.exists())
                     if (!accountFolder.mkdir()) return false;
 
-                File savedVariablesFolderAcc = new File(accountFolder.getAbsolutePath() + "\\" + "SavedVariables");
+                File savedVariablesFolderAcc = new File(accountFolder.getAbsolutePath() + File.separator + Utils.savedVariablesFodler);
                 if (!savedVariablesFolderAcc.exists())
                     if (!savedVariablesFolderAcc.mkdir()) return false;
 
-                File realmFolder = new File(accountFolder.getAbsolutePath() + "\\" + Utils.templateRealmName);
+                File realmFolder = new File(accountFolder.getAbsolutePath() + File.separator + Utils.templateRealmName);
                 if (!realmFolder.exists())
                     if (!realmFolder.mkdir()) return false;
 
-                File charFolder = new File(realmFolder.getAbsolutePath() + "\\" + Utils.templateCharName);
+                File charFolder = new File(realmFolder.getAbsolutePath() + File.separator + Utils.templateCharName);
                 if (!charFolder.exists())
                     if (!charFolder.mkdir()) return false;
 
-                File savedVariablesFolderChar = new File(charFolder.getAbsolutePath() + "\\" + "SavedVariables");
+                File savedVariablesFolderChar = new File(charFolder.getAbsolutePath() + File.separator + Utils.savedVariablesFodler);
                 if (!savedVariablesFolderChar.exists())
                     if (!savedVariablesFolderChar.mkdir()) return false;
 
-                File templateSavedVariablesFolderAcc = new File(Utils.sourceFolder.getAbsolutePath() + "\\" + "SavedVariables");
-                File templateCharFolder = new File(Utils.sourceFolder.getAbsolutePath() + "\\" + oldRealmName + "\\" + oldCharName);
-                File templateSavedVariablesFolderChar = new File(templateCharFolder + "\\" + "SavedVariables");
+                File templateSavedVariablesFolderAcc = new File(Utils.sourceFolder.getAbsolutePath() + File.separator + Utils.savedVariablesFodler);
+                File templateCharFolder = new File(Utils.sourceFolder.getAbsolutePath() + File.separator + oldRealmName + File.separator + oldCharName);
+                File templateSavedVariablesFolderChar = new File(templateCharFolder + File.separator + Utils.savedVariablesFodler);
                 File[] templateAccountFolderFiles = Utils.sourceFolder.listFiles(File::isFile);
                 File[] templateCharFolderFiles = templateCharFolder.listFiles(File::isFile);
                 File[] templateSavedVariablesAccFolderFiles = templateSavedVariablesFolderAcc.listFiles(File::isFile);
@@ -117,7 +114,7 @@ public class MakeTemplateService extends Service {
                     progress += step;
                     updateProgress(progress, 1);
 
-                    File newFile = new File(destinationPath + "\\" + file.getName());
+                    File newFile = new File(destinationPath + File.separator + file.getName());
 
                     if (newFile.exists())
                         continue;
@@ -129,25 +126,25 @@ public class MakeTemplateService extends Service {
 
         private boolean renameVariables() {
 
-            File newAccountFolder = new File(Utils.destinationFolder.getAbsolutePath() + "\\" + Utils.templateAccountName);
+            File newAccountFolder = new File(Utils.destinationFolder.getAbsolutePath() + File.separator + Utils.templateAccountName);
             if (!newAccountFolder.exists())
                 return false;
 
             File[] accountFolderFiles = newAccountFolder.listFiles(File::isFile);
 
-            File savedVariablesFolderAcc = new File(newAccountFolder.getAbsolutePath() + "\\" + "SavedVariables");
+            File savedVariablesFolderAcc = new File(newAccountFolder.getAbsolutePath() + File.separator + Utils.savedVariablesFodler);
             if (!savedVariablesFolderAcc.exists())
                 return false;
 
             File[] savedVariablesAccFiles = savedVariablesFolderAcc.listFiles(File::isFile);
 
-            File charFolder = new File(newAccountFolder.getAbsolutePath() + "\\" + Utils.templateRealmName + "\\" + Utils.templateCharName);
+            File charFolder = new File(newAccountFolder.getAbsolutePath() + File.separator + Utils.templateRealmName + File.separator + Utils.templateCharName);
             if (!charFolder.exists())
                 return false;
 
             File[] charFolderFiles = charFolder.listFiles(File::isFile);
 
-            File savedVariablesFolderChar = new File(charFolder.getAbsolutePath() + "\\" + "SavedVariables");
+            File savedVariablesFolderChar = new File(charFolder.getAbsolutePath() + File.separator + Utils.savedVariablesFodler);
             if (!savedVariablesFolderChar.exists())
                 return false;
 
@@ -161,8 +158,7 @@ public class MakeTemplateService extends Service {
             progress = 0.50;
             step = 0.50 / result.length;
 
-            for (File file : result)
-            {
+            for (File file : result) {
                 Utils.modifyFile(file.getAbsolutePath(), oldRealmName, Utils.templateRealmName, oldCharName, Utils.templateCharName);
                 progress += step;
                 updateMessage("Updating: " + file.getName());
@@ -172,8 +168,7 @@ public class MakeTemplateService extends Service {
             return true;
         }
 
-        private void CleanUp()
-        {
+        private void CleanUp() {
             Utils.sourceFolder = null;
             Utils.destinationFolder = null;
             progress = 0;
