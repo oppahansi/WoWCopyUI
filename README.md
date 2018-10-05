@@ -1,3 +1,7 @@
+**Please consider donating if you find my work usefull.**
+
+[![Donate](https://img.shields.io/badge/Donate-PayPal-green.svg)](https://www.paypal.me/schellenberga)
+
 # WoWCopyUI (Vanilla, TBC)
 Copy your existing UI to a new Character - including updating all addon files.
 
